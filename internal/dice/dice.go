@@ -1,5 +1,9 @@
 package dice
 
+type RollableSet interface {
+	Roll() (RollResults, error)
+}
+
 type RollResult struct {
 	value int
 	die   Die

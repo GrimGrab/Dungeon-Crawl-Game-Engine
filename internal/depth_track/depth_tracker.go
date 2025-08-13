@@ -1,5 +1,15 @@
 package depth_track
 
+type DepthManager interface {
+	PosseLevel() int
+	DarknessLevel() int
+	IncreasePosseLevel()
+	DecreasePosseLevel()
+	IncreaseDarknessLevel()
+	DecreaseDarknessLevel()
+	MinimumDarknessRoll() int
+}
+
 // DepthTracker manages the levels of Posse and Darkness in the game.
 type DepthTracker struct {
 	maxLevel      int

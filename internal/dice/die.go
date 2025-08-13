@@ -5,6 +5,11 @@ import (
 	"math/big"
 )
 
+type Rollable interface {
+	Roll() (RollResult, error)
+	Sides() []int
+}
+
 // Die represents a die with a set of sides, each side having an integer value.
 type Die struct {
 	sides []int
