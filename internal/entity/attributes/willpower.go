@@ -16,9 +16,10 @@ type Willpower struct {
 	effectManager *effects.EffectManager
 }
 
-func NewWillpower(willpower int) *Willpower {
+func NewWillpower(willpower int, effectManager *effects.EffectManager) *Willpower {
 	return &Willpower{
-		willpower: willpower,
+		willpower:     willpower,
+		effectManager: effectManager,
 	}
 }
 
