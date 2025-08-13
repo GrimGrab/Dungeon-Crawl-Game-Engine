@@ -13,9 +13,10 @@ type Defense struct {
 	effectManager *effects.EffectManager
 }
 
-func NewDefense(defense int) *Defense {
+func NewDefense(defense int, effectManager effects.EffectManager) *Defense {
 	return &Defense{
-		defense: defense,
+		defense:       defense,
+		effectManager: &effectManager,
 	}
 }
 

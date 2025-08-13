@@ -30,7 +30,7 @@ func (g *Grit) BaseMaxGrit() int {
 }
 
 func (g *Grit) MaxGrit() int {
-	return g.maxGrit + g.maxGrit + g.effectManager.AttributeModifier(common.AttributeGrit)
+	return g.maxGrit + g.effectManager.AttributeModifier(common.AttributeGrit)
 }
 
 func (g *Grit) IncreaseGrit(amount int) {
