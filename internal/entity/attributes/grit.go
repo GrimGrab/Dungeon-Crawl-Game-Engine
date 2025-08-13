@@ -1,14 +1,23 @@
 package attributes
 
+import (
+	"SoB/internal/common"
+	effects "SoB/internal/entity/attributes/effect"
+)
+
 type Grit struct {
 	grit    int
 	maxGrit int
+
+	effectManager *effects.EffectManager
 }
 
-func NewGrit(initialGrit, maxGrit int) *Grit {
+func NewGrit(initialGrit, maxGrit int, effectsManager *effects.EffectManager) *Grit {
 	return &Grit{
 		grit:    initialGrit,
 		maxGrit: maxGrit,
+
+		effectManager: effectsManager,
 	}
 }
 
@@ -16,8 +25,12 @@ func (g *Grit) Grit() int {
 	return g.grit
 }
 
-func (g *Grit) MaxGrit() int {
+func (g *Grit) BaseMaxGrit() int {
 	return g.maxGrit
+}
+
+func (g *Grit) MaxGrit() int {
+	return g.maxGrit + g.maxGrit + g.effectManager.AttributeModifier(common.AttributeGrit)
 }
 
 func (g *Grit) IncreaseGrit(amount int) {
@@ -25,7 +38,7 @@ func (g *Grit) IncreaseGrit(amount int) {
 		return
 	}
 	g.grit += amount
-	if g.grit > g.maxGrit {
+	if g.grit > g.maxGrit+g.effectManager.AttributeModifier(common.AttributeGrit) {
 		g.grit = g.maxGrit
 	}
 }

@@ -107,7 +107,7 @@ const (
 	StateUpgradeHero       State = "Upgrade Hero"
 	StateBuyEquipment      State = "Buy Equipment"
 	StateSellLoot          State = "Sell Loot"
-	StateHealInjuries      State = "RegainHealth Injuries"
+	StateHealInjuries      State = "GainHealth Injuries"
 
 	// Mission Completion
 	StateMissionComplete  State = "Mission Complete"

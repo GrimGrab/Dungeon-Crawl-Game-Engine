@@ -1,5 +1,10 @@
 package attributes
 
+import (
+	"SoB/internal/common"
+	effects "SoB/internal/entity/attributes/effect"
+)
+
 const MinimumStatValue = 1
 
 // Stats represents the core attributes of a character, including base values and any active effect.
@@ -10,10 +15,12 @@ type Stats struct {
 	strength int
 	lore     int
 	luck     int
+
+	effectManager *effects.EffectManager
 }
 
 // NewStats creates a new Stats instance with the given base attribute values.
-func NewStats(agility, cunning, spirit, strength, lore, luck int) *Stats {
+func NewStats(agility, cunning, spirit, strength, lore, luck int, effectManager *effects.EffectManager) *Stats {
 	return &Stats{
 		agility:  agility,
 		cunning:  cunning,
@@ -21,6 +28,8 @@ func NewStats(agility, cunning, spirit, strength, lore, luck int) *Stats {
 		strength: strength,
 		lore:     lore,
 		luck:     luck,
+
+		effectManager: effectManager,
 	}
 }
 
@@ -53,3 +62,18 @@ func (s *Stats) BaseLore() int {
 func (s *Stats) BaseLuck() int {
 	return s.luck
 }
+
+func (s *Stats) Agility() int {
+	return s.agility + s.effectManager.AttributeModifier(common.AttributeAgility)
+}
+func (s *Stats) Cunning() int {
+	return s.cunning + s.effectManager.AttributeModifier(common.AttributeCunning)
+}
+func (s *Stats) Spirit() int {
+	return s.spirit + s.effectManager.AttributeModifier(common.AttributeSpirit)
+}
+func (s *Stats) Strength() int {
+	return s.strength + s.effectManager.AttributeModifier(common.AttributeStrength)
+}
+func (s *Stats) Lore() int { return s.lore + s.effectManager.AttributeModifier(common.AttributeLore) }
+func (s *Stats) Luck() int { return s.luck + s.effectManager.AttributeModifier(common.AttributeLuck) }

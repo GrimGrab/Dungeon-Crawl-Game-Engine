@@ -10,6 +10,15 @@ type Gender string
 const (
 	Male   Gender = "Male"
 	Female Gender = "Female"
+
+	minimumStatValue = 1
+	minimumToHitRoll = 1
+	maximumToHitRoll = 6
+	minimumCombat    = 1
+	minimumHealth    = 1
+	minimumSanity    = 1
+	minimumGrit      = 0
+	initialGrit      = 1
 )
 
 type Character struct {
@@ -20,25 +29,70 @@ type Character struct {
 	gender Gender
 }
 
-func NewCharacter(id, name, description string, gender Gender, health *attributes.Health, sanity *attributes.Sanity, grit *attributes.Grit, stats *attributes.Stats, offensiveStats *attributes.OffensiveStats, keywords *attributes.Keywords) (*Character, error) {
-	if health == nil || sanity == nil || grit == nil || stats == nil {
-		return nil, ErrInvalidEntityConstruction("health, sanity, grit, and stats must be provided when creating a character")
+type CharacterCreationOptions struct {
+	Name        string
+	Description string
+	Gender      Gender
+	Keywords    *attributes.Keywords
+
+	MaxHealth int
+	MaxSanity int
+	MaxGrit   int
+
+	RangedToHitRoll int
+	MeleeToHitRoll  int
+	Combat          int
+
+	Agility  int
+	Cunning  int
+	Spirit   int
+	Strength int
+	Lore     int
+	Luck     int
+}
+
+func ValidateCharacterOptions(options CharacterCreationOptions) error {
+	if options.Name == "" {
+		return ErrInvalidName()
 	}
+	if options.MaxHealth <= minimumHealth {
+		return ErrInvalidHealth()
+	}
+	if options.MaxSanity < minimumSanity {
+		return ErrInvalidSanity()
+	}
+	if options.MaxGrit < minimumGrit {
+		return ErrInvalidGrit()
+	}
+	if options.RangedToHitRoll < minimumToHitRoll || options.MeleeToHitRoll < minimumToHitRoll || options.RangedToHitRoll > maximumToHitRoll || options.MeleeToHitRoll > maximumToHitRoll {
+		return ErrInvalidToHitRoll()
+	}
+	if options.Combat < minimumCombat {
+		return ErrInvalidCombat()
+	}
+	if options.Agility < minimumStatValue || options.Cunning < minimumStatValue || options.Spirit < minimumStatValue || options.Strength < minimumStatValue || options.Lore < minimumStatValue || options.Luck < minimumStatValue {
+		return ErrInvalidStats()
+	}
+	return nil
+}
+
+func NewCharacter(id string, options CharacterCreationOptions) (*Character, error) {
+	effectManager := effects.NewEffectManager()
 	return &Character{
 		Entity: Entity{
 			id:             id,
-			name:           name,
-			description:    description,
+			name:           options.Name,
+			description:    options.Description,
 			kind:           KindCharacter,
-			health:         health,
-			offensiveStats: offensiveStats,
-			keywords:       keywords,
-			effectManager:  effects.NewEffectManager(),
+			health:         attributes.NewHealth(options.MaxHealth, effectManager),
+			offensiveStats: attributes.NewOffensiveStats(options.RangedToHitRoll, options.MeleeToHitRoll, options.Combat, effectManager),
+			keywords:       options.Keywords,
+			effectManager:  effectManager,
 		},
-		sanity: sanity,
-		stats:  stats,
-		grit:   grit,
-		gender: gender,
+		sanity: attributes.NewSanity(options.MaxSanity, effectManager),
+		stats:  attributes.NewStats(options.Agility, options.Cunning, options.Spirit, options.Strength, options.Lore, options.Luck, effectManager),
+		grit:   attributes.NewGrit(initialGrit, options.MaxGrit, effectManager),
+		gender: options.Gender,
 	}, nil
 }
 
@@ -52,4 +106,8 @@ func (c *Character) Stats() *attributes.Stats {
 
 func (c *Character) Grit() *attributes.Grit {
 	return c.grit
+}
+
+func (c *Character) Gender() Gender {
+	return c.gender
 }

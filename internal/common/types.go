@@ -2,6 +2,7 @@ package common
 
 type DurationType string
 type AttributeType string
+type CombatAttributeType string
 type Action string
 
 const (
@@ -13,20 +14,23 @@ const (
 )
 
 const (
-	AttributeAgility     AttributeType = "agility"
-	AttributeCunning     AttributeType = "cunning"
-	AttributeSpirit      AttributeType = "spirit"
-	AttributeStrength    AttributeType = "strength"
-	AttributeLore        AttributeType = "lore"
-	AttributeLuck        AttributeType = "luck"
-	AttributeDefense     AttributeType = "defense"
-	AttributeWillpower   AttributeType = "willpower"
-	AttributeHealth      AttributeType = "health"
-	AttributeSanity      AttributeType = "sanity"
-	AttributeGrit        AttributeType = "grit"
-	AttributeRangedToHit AttributeType = "ranged_to_hit"
-	AttributeMeleeToHit  AttributeType = "melee_to_hit"
-	AttributeCombat      AttributeType = "combat"
+	AttributeAgility  AttributeType = "agility"
+	AttributeCunning  AttributeType = "cunning"
+	AttributeSpirit   AttributeType = "spirit"
+	AttributeStrength AttributeType = "strength"
+	AttributeLore     AttributeType = "lore"
+	AttributeLuck     AttributeType = "luck"
+	AttributeHealth   AttributeType = "health"
+	AttributeSanity   AttributeType = "sanity"
+	AttributeGrit     AttributeType = "grit"
+)
+
+const (
+	CombatAttributeCombat      CombatAttributeType = "combat"
+	CombatAttributeRangedToHit CombatAttributeType = "ranged_to_hit"
+	CombatAttributeMeleeToHit  CombatAttributeType = "melee_to_hit"
+	CombatAttributeDefense     CombatAttributeType = "defense"
+	CombatAttributeWillpower   CombatAttributeType = "willpower"
 )
 
 const (

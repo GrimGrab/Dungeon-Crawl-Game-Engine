@@ -1,12 +1,16 @@
 package attributes
 
-import "SoB/internal/common"
+import (
+	"SoB/internal/common"
+	effects "SoB/internal/entity/attributes/effect"
+)
 
 const MaxDefense = 6
 const MinDefense = 1
 
 type Defense struct {
-	defense int
+	defense       int
+	effectManager *effects.EffectManager
 }
 
 func NewDefense(defense int) *Defense {
@@ -19,12 +23,12 @@ func (d *Defense) BaseDefense() int {
 	return d.defense
 }
 
-type DefenseEffects struct {
-	name        string
-	description string
-
-	defense int
-
-	durationType common.DurationType
-	duration     int
+func (d *Defense) Defense() int {
+	total := d.defense + d.effectManager.CombatAttributeModifier(common.CombatAttributeDefense)
+	if total < MinDefense {
+		return MinDefense
+	} else if total > MaxDefense {
+		return MaxDefense
+	}
+	return total
 }
