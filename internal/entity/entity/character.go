@@ -2,6 +2,7 @@ package entity
 
 import (
 	"SoB/internal/entity/attributes"
+	effects "SoB/internal/entity/attributes/effect"
 )
 
 type Gender string
@@ -32,6 +33,7 @@ func NewCharacter(id, name, description string, gender Gender, health *attribute
 			health:         health,
 			offensiveStats: offensiveStats,
 			keywords:       keywords,
+			effectManager:  effects.NewEffectManager(),
 		},
 		sanity: sanity,
 		stats:  stats,

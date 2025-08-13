@@ -39,23 +39,3 @@ func (g *Grit) DecreaseGrit(amount int) {
 		g.grit = 0
 	}
 }
-
-func (g *Grit) IncreaseMaxGrit(amount int) {
-	if amount < 0 {
-		return
-	}
-	g.maxGrit += amount
-}
-
-func (g *Grit) DecreaseMaxGrit(amount int) {
-	if amount < 0 {
-		return
-	}
-	g.maxGrit -= amount
-	if g.maxGrit < 0 {
-		g.maxGrit = 0
-	}
-	if g.grit > g.maxGrit {
-		g.grit = g.maxGrit
-	}
-}
