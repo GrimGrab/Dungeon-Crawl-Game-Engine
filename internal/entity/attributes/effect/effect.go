@@ -61,8 +61,8 @@ func (e *Effect) IsExpired() bool {
 
 type DiceEffect struct {
 	action      common.Action // Which action it modifies
-	diceAdded   []dice.Die
-	diceRemoved []dice.Die
+	diceAdded   []dice.Rollable
+	diceRemoved []dice.Rollable
 	modifier    func(results dice.RollResult) dice.RollResult
 	reroll      int
 }
@@ -71,11 +71,11 @@ func (de *DiceEffect) Action() common.Action {
 	return de.action
 }
 
-func (de *DiceEffect) DiceAdded() []dice.Die {
+func (de *DiceEffect) DiceAdded() []dice.Rollable {
 	return de.diceAdded
 }
 
-func (de *DiceEffect) DiceRemoved() []dice.Die {
+func (de *DiceEffect) DiceRemoved() []dice.Rollable {
 	return de.diceRemoved
 }
 
