@@ -1,12 +1,7 @@
 package context
 
-import (
-	"SoB/internal/engine"
-	"SoB/internal/player"
-)
+import "SoB/internal/engine"
 
 type GameContext struct {
-	Engine       *engine.Engine
-	ActivePlayer *player.Player
-	Players      []*player.Player
+	Engine *engine.Engine
 }

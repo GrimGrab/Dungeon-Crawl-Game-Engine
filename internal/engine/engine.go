@@ -8,7 +8,7 @@ import (
 
 type Engine struct {
 	players    []*player.Player
-	gameMap    *world.World
+	gameMap    *world.Map
 	depthTrack *depth_track.DepthTracker
 	state      State
 }
