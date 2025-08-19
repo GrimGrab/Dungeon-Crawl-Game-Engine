@@ -5,6 +5,10 @@ type AttributeType string
 type CombatAttributeType string
 type Action string
 
+type Coordinates struct {
+	X, Y int
+}
+
 const (
 	DurationTypeCombat    DurationType = "combat"
 	DurationTypeRound     DurationType = "round"
