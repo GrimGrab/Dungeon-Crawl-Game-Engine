@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"SoB/internal/engine"
 	"crypto/rand"
 	"encoding/hex"
 	"github.com/gorilla/websocket"
@@ -10,12 +11,14 @@ import (
 
 type GameServer struct {
 	controller Controller
+	engine     *engine.Engine
 	log        *slog.Logger
 }
 
-func NewGameServer(controller Controller, logger *slog.Logger) *GameServer {
+func NewGameServer(controller Controller, engine *engine.Engine, logger *slog.Logger) *GameServer {
 	return &GameServer{
 		controller: controller,
+		engine:     engine,
 		log:        logger,
 	}
 }

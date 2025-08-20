@@ -1,116 +1,152 @@
 package engine
 
-type State string
+import (
+	"SoB/internal/entity/entity"
+)
+
+type Phase string
+
+type State struct {
+	Round int            `json:"round"` // Current round number
+	Turn  *entity.Entity `json:"turn"`  // Current entities turn
+	Phase Phase          `json:"Phase"` // Current Phase of the game
+}
+
+func NewState() *State {
+	return &State{
+		Round: 0,
+		Turn:  nil,
+		Phase: StateGameSetup,
+	}
+}
+
+func (s *State) IncRound() {
+	s.Round = s.Round + 1
+}
+
+func (s *State) SetPhase(phase Phase) {
+	s.Phase = phase
+}
+
+func (s *State) Reset() {
+	s.Round = 0
+	s.Turn = nil
+	s.Phase = StateGameSetup
+}
+
+func (s *State) SetTurn(turn *entity.Entity) {
+	s.Turn = turn
+}
 
 const (
 	// Game Setup and Mission States
-	StateGameSetup     State = "Game Setup"
-	StateMissionSelect State = "Mission Select"
-	StateMissionSetup  State = "Mission Setup"
-	StateDeployHeroes  State = "Deploy Heroes"
+	StateGameSetup     Phase = "Game Setup"
+	StateMissionSelect Phase = "Mission Select"
+	StateMissionSetup  Phase = "Mission Setup"
+	StateDeployHeroes  Phase = "Deploy Heroes"
 
 	// Turn Structure
-	StateStartGameTurn State = "Start Game Turn"
-	StateEndGameTurn   State = "End Game Turn"
-	StateStartHeroTurn State = "Start Hero Turn"
-	StateEndHeroTurn   State = "End Hero Turn"
+	StateStartGameTurn Phase = "Start Game Turn"
+	StateEndGameTurn   Phase = "End Game Turn"
+	StateStartHeroTurn Phase = "Start Hero Turn"
+	StateEndHeroTurn   Phase = "End Hero Turn"
 
 	// Hold Back the Darkness
-	StateStartHoldBackDarkness State = "Hold Back Darkness"
-	StateEndHoldBackDarkness   State = "End Hold Back Darkness"
+	StateStartHoldBackDarkness Phase = "Hold Back Darkness"
+	StateEndHoldBackDarkness   Phase = "End Hold Back Darkness"
 
 	// Exploration States
-	StateStartPlaceExploration  State = "Start Place Exploration"
-	StateEndPlaceExploration    State = "End Place Exploration"
-	StateStartRevealExploration State = "Start Reveal Exploration"
-	StateEndRevealExploration   State = "End Reveal Exploration"
-	StateDrawMapTile            State = "Draw Map Tile"
-	StateConnectTile            State = "Connect Tile"
-	StateSpawnEnemies           State = "Spawn Enemies"
-	StateCheckSpecialRules      State = "Check Special Rules"
-	StateEncounterCheck         State = "Encounter Check"
-	StateDiscoverLoot           State = "Discover Loot"
+	StateStartPlaceExploration  Phase = "Start Place Exploration"
+	StateEndPlaceExploration    Phase = "End Place Exploration"
+	StateStartRevealExploration Phase = "Start Reveal Exploration"
+	StateEndRevealExploration   Phase = "End Reveal Exploration"
+	StateDrawMapTile            Phase = "Draw Map Tile"
+	StateConnectTile            Phase = "Connect Tile"
+	StateSpawnEnemies           Phase = "Spawn Enemies"
+	StateCheckSpecialRules      Phase = "Check Special Rules"
+	StateEncounterCheck         Phase = "Encounter Check"
+	StateDiscoverLoot           Phase = "Discover Loot"
 
 	// Hero Action States
-	StateHeroActivation    State = "Hero Activation"
-	StateEndHeroActivation State = "End Hero Activation"
-	StateHeroMovement      State = "Hero Movement"
-	StateEndHeroMovement   State = "End Hero Movement"
-	StateHeroAttack        State = "Hero Attack"
-	StateEndHeroAttack     State = "End Hero Attack"
-	StateHeroAbility       State = "Hero Ability"
-	StateEndHeroAbility    State = "End Hero Ability"
-	StateHeroScavenge      State = "Hero Scavenge"
-	StateEndHeroScavenge   State = "End Hero Scavenge"
-	StateHeroSearch        State = "Hero Search"
-	StateEndHeroSearch     State = "End Hero Search"
-	StateHeroRest          State = "Hero Rest"
-	StateEndHeroRest       State = "End Hero Rest"
+	StateHeroActivation    Phase = "Hero Activation"
+	StateEndHeroActivation Phase = "End Hero Activation"
+	StateHeroMovement      Phase = "Hero Movement"
+	StateEndHeroMovement   Phase = "End Hero Movement"
+	StateHeroAttack        Phase = "Hero Attack"
+	StateEndHeroAttack     Phase = "End Hero Attack"
+	StateHeroAbility       Phase = "Hero Ability"
+	StateEndHeroAbility    Phase = "End Hero Ability"
+	StateHeroScavenge      Phase = "Hero Scavenge"
+	StateEndHeroScavenge   Phase = "End Hero Scavenge"
+	StateHeroSearch        Phase = "Hero Search"
+	StateEndHeroSearch     Phase = "End Hero Search"
+	StateHeroRest          Phase = "Hero Rest"
+	StateEndHeroRest       Phase = "End Hero Rest"
 
 	// Combat States
-	StateStartCombat     State = "Start Combat"
-	StateInitiativeRoll  State = "Initiative Roll"
-	StateCombatRound     State = "Combat Round"
-	StateTargetSelection State = "Target Selection"
-	StateRollToHit       State = "Roll To Hit"
-	StateRollDamage      State = "Roll LoseHealth"
-	StateApplyDamage     State = "Apply LoseHealth"
-	StateEndCombat       State = "End Combat"
+	StateStartCombat     Phase = "Start Combat"
+	StateInitiativeRoll  Phase = "Initiative Roll"
+	StateCombatRound     Phase = "Combat Round"
+	StateTargetSelection Phase = "Target Selection"
+	StateRollToHit       Phase = "Roll To Hit"
+	StateRollDamage      Phase = "Roll LoseHealth"
+	StateApplyDamage     Phase = "Apply LoseHealth"
+	StateEndCombat       Phase = "End Combat"
 
 	// Injury and Death System
-	StateInjuryCheck     State = "Injury Check"
-	StateApplyInjury     State = "Apply Injury"
-	StateDeathSave       State = "Death Save"
-	StateCharacterDown   State = "Character Down"
-	StateCharacterRevive State = "Character Revive"
+	StateInjuryCheck     Phase = "Injury Check"
+	StateApplyInjury     Phase = "Apply Injury"
+	StateDeathSave       Phase = "Death Save"
+	StateCharacterDown   Phase = "Character Down"
+	StateCharacterRevive Phase = "Character Revive"
 
 	// Enemy AI States
-	StateEnemyActivation State = "Enemy Activation"
-	StateEnemyMovement   State = "Enemy Movement"
-	StateEnemyAttack     State = "Enemy Attack"
-	StateEnemyAbility    State = "Enemy Ability"
-	StateEnemyEndTurn    State = "Enemy End Turn"
+	StateEnemyActivation Phase = "Enemy Activation"
+	StateEnemyMovement   Phase = "Enemy Movement"
+	StateEnemyAttack     Phase = "Enemy Attack"
+	StateEnemyAbility    Phase = "Enemy Ability"
+	StateEnemyEndTurn    Phase = "Enemy End Turn"
 
 	// Growing Dread System
-	StateAddGrowingDread    State = "Add Growing Dread"
-	StateRevealGrowingDread State = "Reveal Growing Dread"
-	StateRemoveGrowingDread State = "Remove Growing Dread"
+	StateAddGrowingDread    Phase = "Add Growing Dread"
+	StateRevealGrowingDread Phase = "Reveal Growing Dread"
+	StateRemoveGrowingDread Phase = "Remove Growing Dread"
 
 	// Corruption and Mutation System
-	StateCorruptionCheck  State = "Corruption Check"
-	StateGainMutation     State = "Gain Mutation"
-	StateCorruptionEffect State = "Corruption Effect"
+	StateCorruptionCheck  Phase = "Corruption Check"
+	StateGainMutation     Phase = "Gain Mutation"
+	StateCorruptionEffect Phase = "Corruption Effect"
 
 	// Environmental Hazards
-	StateHazardCheck   State = "Hazard Check"
-	StateWeatherEffect State = "Weather Effect"
-	StateTrapTrigger   State = "Trap Trigger"
+	StateHazardCheck   Phase = "Hazard Check"
+	StateWeatherEffect Phase = "Weather Effect"
+	StateTrapTrigger   Phase = "Trap Trigger"
 
 	// Events and Encounters
-	StateDrawEvent      State = "Draw Event"
-	StateResolveEvent   State = "Resolve Event"
-	StateStoryEncounter State = "Story Encounter"
+	StateDrawEvent      Phase = "Draw Event"
+	StateResolveEvent   Phase = "Resolve Event"
+	StateStoryEncounter Phase = "Story Encounter"
 
 	// Loot and Items
-	StateLootRoll      State = "Loot Roll"
-	StateDrawLoot      State = "Draw Loot"
-	StateEquipItem     State = "Equip Item"
-	StateUseConsumable State = "Use Consumable"
-	StateDropItem      State = "Drop Item"
+	StateLootRoll      Phase = "Loot Roll"
+	StateDrawLoot      Phase = "Draw Loot"
+	StateEquipItem     Phase = "Equip Item"
+	StateUseConsumable Phase = "Use Consumable"
+	StateDropItem      Phase = "Drop Item"
 
 	// Town Phase States
-	StateReturnToTown      State = "Return To Town"
-	StateVisitSaloon       State = "Visit Saloon"
-	StateVisitGeneralStore State = "Visit General Store"
-	StateVisitGunsmith     State = "Visit Gunsmith"
-	StateVisitBank         State = "Visit Bank"
-	StateUpgradeHero       State = "Upgrade Hero"
-	StateBuyEquipment      State = "Buy Equipment"
-	StateSellLoot          State = "Sell Loot"
-	StateHealInjuries      State = "GainHealth Injuries"
+	StateReturnToTown      Phase = "Return To Town"
+	StateVisitSaloon       Phase = "Visit Saloon"
+	StateVisitGeneralStore Phase = "Visit General Store"
+	StateVisitGunsmith     Phase = "Visit Gunsmith"
+	StateVisitBank         Phase = "Visit Bank"
+	StateUpgradeHero       Phase = "Upgrade Hero"
+	StateBuyEquipment      Phase = "Buy Equipment"
+	StateSellLoot          Phase = "Sell Loot"
+	StateHealInjuries      Phase = "GainHealth Injuries"
 
 	// Mission Completion
-	StateMissionComplete  State = "Mission Complete"
-	StateMissionFailed    State = "Mission Failed"
-	StateCalculateRewards State = "Calculate Rewards"
+	StateMissionComplete  Phase = "Mission Complete"
+	StateMissionFailed    Phase = "Mission Failed"
+	StateCalculateRewards Phase = "Calculate Rewards"
 )

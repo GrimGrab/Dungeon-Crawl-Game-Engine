@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"SoB/internal/controller"
+	"SoB/internal/engine"
 	"log/slog"
 	"os"
 
@@ -36,6 +37,8 @@ Example usage:
 			slog.String("port", port),
 			slog.Bool("debug", debug))
 
+		engine := engine.New()
+
 		// Create game controller
 		gameController := controller.NewGameController(
 			logger.With(slog.String("component", "game")),
@@ -44,6 +47,7 @@ Example usage:
 		// Create server
 		server := controller.NewGameServer(
 			gameController,
+			engine,
 			logger.With(slog.String("component", "server")),
 		)
 

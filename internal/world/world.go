@@ -18,7 +18,7 @@ func (d *Map) SetSpace(coordinates common.Coordinates, space Space) {
 	d.spaces[coordinates] = &space
 }
 
-func NewDungeon() *Map {
+func NewMap() *Map {
 	return &Map{spaces: make(map[common.Coordinates]*Space)}
 }
 
