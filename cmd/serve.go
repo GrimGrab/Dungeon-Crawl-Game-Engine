@@ -1,39 +1,82 @@
 package cmd
 
 import (
-	"SoB/internal/server"
-	"log"
+	"SoB/internal/controller"
+	"log/slog"
+	"os"
 
 	"github.com/spf13/cobra"
 )
 
-var port string
+var (
+	port  string
+	debug bool
+)
 
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Start the WebSocket engine server",
-	Long: `Start the WebSocket engine server that echoes "hello world" to all connected clients.
+	Short: "Start the game server",
+	Long: `Start the WebSocket game server with the configured controller.
 	
 The server will start on the specified port (default: 8080) and provide:
-- WebSocket endpoint at /ws that echoes "hello world"
-- Web interface at / for testing the WebSocket connection
+- WebSocket endpoint at /ws for game connections
+- Structured logging with debug mode support
+- Pluggable controller architecture
 
 Example usage:
   gameserver serve
-  gameserver serve --port 3000`,
+  gameserver serve --port 3000
+  gameserver serve --port 3000 --debug`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Printf("Starting WebSocket server on port %s...", port)
+		// Setup logger
+		logger := setupLogger(debug)
 
-		if err := server.StartServer(port); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
+		logger.Info("starting game server",
+			slog.String("port", port),
+			slog.Bool("debug", debug))
+
+		// Create game controller
+		gameController := controller.NewGameController(
+			logger.With(slog.String("component", "game")),
+		)
+
+		// Create server
+		server := controller.NewGameServer(
+			gameController,
+			logger.With(slog.String("component", "server")),
+		)
+
+		// Start server
+		if err := server.Start(":" + port); err != nil {
+			logger.Error("server failed", slog.String("error", err.Error()))
+			os.Exit(1)
 		}
 	},
+}
+
+func setupLogger(debug bool) *slog.Logger {
+	var handler slog.Handler
+	opts := &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}
+
+	if debug {
+		opts.Level = slog.LevelDebug
+		// Text handler for development (human-readable)
+		handler = slog.NewTextHandler(os.Stdout, opts)
+	} else {
+		// JSON handler for production (machine-parseable)
+		handler = slog.NewJSONHandler(os.Stdout, opts)
+	}
+
+	return slog.New(handler)
 }
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
 
-	// Add port flag
+	// Add flags
 	serveCmd.Flags().StringVarP(&port, "port", "p", "8080", "Port to run the server on")
+	serveCmd.Flags().BoolVarP(&debug, "debug", "d", false, "Enable debug logging")
 }
